@@ -12,71 +12,10 @@ jobs:
     - name: "amd64 (x86_64) - gcc"
       arch: amd64
       compiler: gcc
-    - name: "amd64 (x86_64) - clang"
-      arch: amd64
-      compiler: clang
-    # Intel, 32-bit, Little-endian
-    - name: i686
-      arch: amd64
-      compiler: gcc
-      env:
-        - CFLAGS="-m32"
-        - SETARCH="setarch i686 --verbose --3gb"
-      before_install:
-        - sudo apt-get update -yq
-        # If you want to install some additonal dependencies,
-        # run `apt-get -yq install foo:i386`.
-        - |-
-          sudo apt-get -yq install \
-            gcc-multilib
     # ARM, 64-bit, Little-endian
     - name: "arm64 (aarch64) - gcc"
       arch: arm64
       compiler: gcc
-    - name: "arm64 (aarch64) - clang"
-      arch: arm64
-      compiler: clang
-    - name: "arm64 (aarch64) - clang-9"
-      dist: bionic
-      arch: arm64
-      compiler: clang-9
-      addons:
-        apt:
-          sources:
-            - sourceline: 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main'
-              key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
-          packages:
-            - clang-9
-    # ARM, 32-bit, Little-endian
-    - name: "arm32 (armv8l)"
-      arch: arm64
-      compiler: gcc
-      env:
-        # https://packages.ubuntu.com/xenial/crossbuild-essential-armhf
-        - CC=arm-linux-gnueabihf-gcc
-        - SETARCH="setarch linux32 --verbose --32bit"
-      before_install:
-        - sudo dpkg --add-architecture armhf
-        - sudo apt-get update -yq
-        # There is no gcc-multilib on arm64.
-        # https://packages.ubuntu.com/xenial/gcc-multilib
-        # To run bin/hello, we need libc6:armhf deb package.
-        # Check `ldd bin/hello`.
-        # https://askubuntu.com/questions/133389
-        - |-
-          sudo apt-get -yq install \
-            crossbuild-essential-armhf \
-            libc6:armhf
-    # IBM, PowerPC, 64-bit, Little-endian
-    - name: ppc64le
-      arch: ppc64le
-      compiler: gcc
-    # IBM, Z and LinuxONE, 64-bit, Big-endian
-    - name: s390x
-      arch: s390x
-      compiler: gcc
-  allow_failures:
-  fast_finish: true
 install: true
 before_script:
   - dpkg --print-architecture
